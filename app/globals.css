@@ -301,7 +301,7 @@ img {
   flex-wrap: wrap;
   justify-content: center;
   gap: 14px;
-  margin-top: 34px;
+  margin-top: 24px;
 }
 
 .store-badges img {
@@ -320,7 +320,7 @@ img {
 .motion-toggle {
   position: fixed;
   z-index: 30;
-  top: 88px;
+  top: 22px;
   right: 22px;
   display: inline-flex;
   align-items: center;
@@ -361,9 +361,20 @@ img {
 
 .available-section {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(310px, 440px);
-  gap: 36px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 34px;
+  justify-items: center;
+  text-align: center;
+}
+
+.available-section .section-copy {
+  display: grid;
+  justify-items: center;
+  max-width: 860px;
+}
+
+.available-section .store-card {
+  max-width: 760px;
 }
 
 .section-copy,
@@ -1071,7 +1082,7 @@ p {
 
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
 }
 
@@ -1113,13 +1124,65 @@ p {
 }
 
 .news-card h3 {
-  min-height: 112px;
+  min-height: 84px;
   color: var(--blue-900);
 }
 
-.news-card a {
+.news-card a,
+.forum-banner a,
+.secondary-link {
   color: var(--blue-700);
   font-weight: 900;
+}
+
+.forum-banner {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.86fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 0;
+  overflow: hidden;
+  margin-top: 28px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 24px 58px rgba(36, 86, 180, 0.18);
+  transition:
+    box-shadow 240ms ease,
+    transform 240ms ease;
+}
+
+.forum-banner:hover {
+  box-shadow: 0 32px 72px rgba(36, 86, 180, 0.24);
+  transform: translateY(-6px);
+}
+
+.forum-banner img {
+  width: 100%;
+  height: 100%;
+  min-height: 230px;
+  object-fit: cover;
+  transition: transform 480ms ease;
+}
+
+.forum-banner:hover img {
+  transform: scale(1.04);
+}
+
+.forum-banner div {
+  padding: 34px;
+}
+
+.forum-banner p {
+  margin-bottom: 8px;
+  color: var(--blue-700);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.forum-banner h3 {
+  max-width: 560px;
+  color: var(--blue-900);
+  font-size: clamp(1.8rem, 3.2vw, 3.2rem);
+  line-height: 1.08;
 }
 
 .overview-section {
@@ -1128,6 +1191,37 @@ p {
   gap: 52px;
   align-items: center;
   background: #fff;
+}
+
+.about-tcg-section {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(320px, 0.8fr);
+  gap: 50px;
+  align-items: center;
+  background-color: #f8fcff;
+  background-size: 220px auto;
+}
+
+.about-tcg-section h2 {
+  max-width: 720px;
+}
+
+.about-copy {
+  padding: 34px;
+  border: 1px solid rgba(36, 86, 180, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 18px 42px rgba(36, 86, 180, 0.1);
+}
+
+.about-copy p {
+  margin-bottom: 18px;
+}
+
+.secondary-link {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
 }
 
 .overview-media {
@@ -1184,6 +1278,10 @@ p {
 .tabs-section h2,
 .tabs-section .eyebrow {
   color: #fff;
+}
+
+.tabs-section .section-heading p:not(.eyebrow) {
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .tabs-layout {
@@ -1596,6 +1694,8 @@ p {
   .details-grid,
   .carousel-shell,
   .overview-section,
+  .forum-banner,
+  .about-tcg-section,
   .tabs-layout,
   .newsletter-section {
     grid-template-columns: 1fr;
@@ -1645,7 +1745,7 @@ p {
   }
 
   .motion-toggle {
-    top: 88px;
+    top: 12px;
     right: 12px;
     bottom: auto;
     min-height: 38px;
@@ -1697,6 +1797,7 @@ p {
   }
 
   .store-card,
+  .about-copy,
   .newsletter-form,
   .tab-panel {
     padding: 24px;
@@ -1736,6 +1837,10 @@ p {
 
   .news-grid {
     grid-template-columns: 1fr;
+  }
+
+  .forum-banner div {
+    padding: 24px;
   }
 
   .news-card h3 {

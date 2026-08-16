@@ -8,15 +8,6 @@ const officialHeroVideo = "https://tcgpocket.pokemon.com/videos/background-video
 const officialTrailerEmbed =
   "https://www.youtube.com/embed/W_s8I736G2k?autoplay=1&rel=0&modestbranding=1";
 
-type CarouselCard = {
-  id: string;
-  title: string;
-  element: string;
-  description: string;
-  image: string;
-  accent: string;
-};
-
 type NewsItem = {
   title: string;
   category: string;
@@ -32,47 +23,6 @@ type TabItem = {
   image: string;
   accent: string;
 };
-
-type PackCard = {
-  title: string;
-  rarity: string;
-  image: string;
-  accent: string;
-};
-
-const navLinks = [
-  { href: "#available", label: "Available Now" },
-  { href: "#details", label: "Details" },
-  { href: "#news", label: "News" },
-  { href: "#cards", label: "Cards" }
-];
-
-const carouselCards: CarouselCard[] = [
-  {
-    id: "pikachu",
-    title: "Pikachu ex",
-    element: "Lightning",
-    description: "Open a pack and step into a sparkling illustrated world.",
-    image: "/assets/immersive-pikachu.webp",
-    accent: "#f5cc20"
-  },
-  {
-    id: "charizard",
-    title: "Charizard ex",
-    element: "Fire",
-    description: "Feel every card burst with cinematic heat and depth.",
-    image: "/assets/charizard-card.webp",
-    accent: "#f2643a"
-  },
-  {
-    id: "collect",
-    title: "Daily Packs",
-    element: "Collection",
-    description: "Collect, display, and revisit favorite pulls every day.",
-    image: "/assets/news-wonder.webp",
-    accent: "#55b9ff"
-  }
-];
 
 const newsItems: NewsItem[] = [
   {
@@ -131,70 +81,6 @@ const tabItems: TabItem[] = [
   }
 ];
 
-const packCards: PackCard[] = [
-  {
-    title: "Pikachu ex",
-    rarity: "Immersive rare",
-    image: "/assets/immersive-pikachu.webp",
-    accent: "#ffce25"
-  },
-  {
-    title: "Charizard ex",
-    rarity: "Special art",
-    image: "/assets/charizard-card.webp",
-    accent: "#ff6848"
-  },
-  {
-    title: "Wonder Pick",
-    rarity: "Daily pull",
-    image: "/assets/news-wonder.webp",
-    accent: "#45b7ff"
-  }
-];
-
-function Header() {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    document.body.classList.toggle("menu-open", open);
-    return () => document.body.classList.remove("menu-open");
-  }, [open]);
-
-  return (
-    <header className="site-header">
-      <a className="brand-mark" href="#top" aria-label="Pokémon TCG Pocket home">
-        TCG Pocket
-      </a>
-      <nav className="desktop-nav" aria-label="Primary navigation">
-        {navLinks.map((link) => (
-          <a key={link.href} href={link.href}>
-            {link.label}
-          </a>
-        ))}
-      </nav>
-      <button
-        className="icon-menu"
-        type="button"
-        aria-expanded={open}
-        aria-controls="mobile-menu"
-        onClick={() => setOpen((value) => !value)}
-      >
-        <span />
-        <span />
-        <span />
-        <span className="sr-only">Toggle menu</span>
-      </button>
-      <div id="mobile-menu" className="mobile-menu" aria-hidden={!open}>
-        {navLinks.map((link) => (
-          <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
-            {link.label}
-          </a>
-        ))}
-      </div>
-    </header>
-  );
-}
-
 function Hero({
   reducedMotion,
   onToggleMotion
@@ -222,7 +108,6 @@ function Hero({
 
   return (
     <section id="top" className="hero" ref={heroRef}>
-      <Header />
       <button
         className="motion-toggle"
         type="button"
@@ -257,14 +142,6 @@ function Hero({
           src={asset("/assets/tcgpocket-logo.webp")}
           alt="Pokémon Trading Card Game Pocket"
         />
-        <div className="store-badges" aria-label="Download links">
-          <a href="https://apps.apple.com/app/id6479970832?mt=8">
-            <img src={asset("/assets/app-store-badge.webp")} alt="Download on the App Store" />
-          </a>
-          <a href="https://play.google.com/store/apps/details?id=jp.pokemon.pokemontcgp">
-            <img src={asset("/assets/google-play-badge.webp")} alt="Get it on Google Play" />
-          </a>
-        </div>
       </div>
     </section>
   );
@@ -284,6 +161,14 @@ function StoreCta() {
           Open two booster packs every day at no cost, collect digital cards, and discover
           immersive artwork made for mobile.
         </p>
+        <div className="store-badges" aria-label="Download links">
+          <a href="https://apps.apple.com/app/id6479970832?mt=8">
+            <img src={asset("/assets/app-store-badge.webp")} alt="Download on the App Store" />
+          </a>
+          <a href="https://play.google.com/store/apps/details?id=jp.pokemon.pokemontcgp">
+            <img src={asset("/assets/google-play-badge.webp")} alt="Get it on Google Play" />
+          </a>
+        </div>
       </div>
       <div
         className="store-card"
@@ -296,89 +181,6 @@ function StoreCta() {
         <a className="primary-button" href="https://store.pokemontcgpocket.com/en-US">
           Shop Now
         </a>
-      </div>
-    </section>
-  );
-}
-
-function PackReveal({ reducedMotion }: { reducedMotion: boolean }) {
-  const [opened, setOpened] = useState(false);
-  const [revealedCount, setRevealedCount] = useState(0);
-  const [round, setRound] = useState(0);
-
-  const advancePack = () => {
-    if (!opened) {
-      setOpened(true);
-      setRevealedCount(0);
-      return;
-    }
-
-    if (revealedCount < packCards.length) {
-      setRevealedCount((value) => value + 1);
-      return;
-    }
-
-    setOpened(false);
-    setRevealedCount(0);
-    window.setTimeout(() => setRound((value) => value + 1), reducedMotion ? 0 : 220);
-  };
-
-  const packButtonLabel = !opened
-    ? "Open Pack"
-    : revealedCount < packCards.length
-      ? "Reveal Next"
-      : "Reset Pack";
-
-  return (
-    <section
-      className={`section pack-section ${opened ? "is-open" : ""} reveal-${revealedCount}`}
-    >
-      <div className="pack-copy">
-        <p className="eyebrow">Pack Opening</p>
-        <h2>Slide open the pack, then reveal each card.</h2>
-        <p>
-          The moment is paced like a mobile pack opening: foil separates first, then cards wait in a
-          stack before each pull flips into the collection.
-        </p>
-        <button className="primary-button" type="button" onClick={advancePack}>
-          {packButtonLabel}
-        </button>
-      </div>
-      <div className="pack-stage" aria-live="polite">
-        <div className="pack-table-light" aria-hidden="true" />
-        <button
-          className="booster-pack"
-          type="button"
-          onClick={advancePack}
-          aria-label={packButtonLabel}
-        >
-          <span className="pack-crimp top" />
-          <span className="pack-crimp bottom" />
-          <span className="pack-logo">Pokémon</span>
-          <strong>TCG Pocket</strong>
-          <em>Booster Pack</em>
-          <span className="tear-line" />
-        </button>
-        <div className="card-stack" key={round}>
-          {packCards.map((card, index) => (
-            <article
-              className={`pull-card ${index < revealedCount ? "is-revealed" : ""}`}
-              key={card.title}
-              style={
-                {
-                  "--pull-accent": card.accent,
-                  "--pull-index": index
-                } as React.CSSProperties
-              }
-            >
-              <img src={asset(card.image)} alt="" />
-              <div>
-                <span>{card.rarity}</span>
-                <h3>{card.title}</h3>
-              </div>
-            </article>
-          ))}
-        </div>
       </div>
     </section>
   );
@@ -418,95 +220,10 @@ function VideoDetails({
   );
 }
 
-function CardCarousel({ reducedMotion }: { reducedMotion: boolean }) {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const touchStart = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (reducedMotion || paused) return;
-    const timer = window.setInterval(() => {
-      setIndex((value) => (value + 1) % carouselCards.length);
-    }, 4200);
-    return () => window.clearInterval(timer);
-  }, [paused, reducedMotion]);
-
-  const active = carouselCards[index];
-  const next = () => setIndex((value) => (value + 1) % carouselCards.length);
-  const previous = () =>
-    setIndex((value) => (value - 1 + carouselCards.length) % carouselCards.length);
-
-  return (
-    <section
-      className="section carousel-section reveal"
-      style={{ "--accent": active.accent } as React.CSSProperties}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onTouchStart={(event) => {
-        touchStart.current = event.touches[0]?.clientX ?? null;
-      }}
-      onTouchEnd={(event) => {
-        if (touchStart.current == null) return;
-        const delta = event.changedTouches[0].clientX - touchStart.current;
-        if (Math.abs(delta) > 42) {
-          if (delta < 0) next();
-          else previous();
-        }
-        touchStart.current = null;
-      }}
-    >
-      <div className="carousel-shell">
-        <div className="carousel-copy">
-          <p className="eyebrow">Featured Cards</p>
-          <h2>Open a pack. Find a story.</h2>
-          <p>
-            Pokémon TCG Pocket turns collecting into a daily reveal, with digital cards that feel
-            bright, layered, and alive.
-          </p>
-          <div className="carousel-controls">
-            <button type="button" onClick={previous} aria-label="Previous card">
-              ‹
-            </button>
-            <button type="button" onClick={next} aria-label="Next card">
-              ›
-            </button>
-          </div>
-        </div>
-        <div className="carousel-stage" aria-live="polite">
-          {carouselCards.map((card, cardIndex) => (
-            <article
-              key={card.id}
-              className={`feature-card ${cardIndex === index ? "active" : ""}`}
-              style={{ "--card-accent": card.accent } as React.CSSProperties}
-              aria-hidden={cardIndex !== index}
-            >
-              <img src={asset(card.image)} alt="" />
-              <div>
-                <span>{card.element}</span>
-                <h3>{card.title}</h3>
-                <p>{card.description}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-      <div className="dots" role="tablist" aria-label="Featured cards">
-        {carouselCards.map((card, cardIndex) => (
-          <button
-            key={card.id}
-            type="button"
-            role="tab"
-            aria-selected={cardIndex === index}
-            aria-label={`Show ${card.title}`}
-            onClick={() => setIndex(cardIndex)}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function NewsGrid() {
+  const [forumItem] = newsItems.slice(-1);
+  const topStories = newsItems.slice(0, 3);
+
   return (
     <section
       id="news"
@@ -520,7 +237,7 @@ function NewsGrid() {
         <h2>Latest News</h2>
       </div>
       <div className="news-grid">
-        {newsItems.map((item, itemIndex) => (
+        {topStories.map((item, itemIndex) => (
           <article
             className="news-card reveal-item"
             key={item.title}
@@ -537,6 +254,18 @@ function NewsGrid() {
           </article>
         ))}
       </div>
+      <article className="forum-banner reveal-item">
+        <img src={asset(forumItem.image)} alt="" />
+        <div>
+          <p>
+            {forumItem.category} · {forumItem.date}
+          </p>
+          <h3>{forumItem.title}</h3>
+          <a href="https://community.pokemon.com/en-us/categories/tcg-pocket">
+            Visit Forums
+          </a>
+        </div>
+      </article>
     </section>
   );
 }
@@ -551,14 +280,41 @@ function GameOverview() {
         <p className="eyebrow">Collect Anywhere</p>
         <h2>Pokémon Trading Card Game Pocket</h2>
         <p>
-          Experience the fun of collecting Pokémon TCG cards with an app built for short sessions,
-          quick reveals, and beautiful digital binders.
+          Experience the fun of collecting Pokémon TCG cards in a new digital format. Open packs,
+          discover cards with nostalgic illustrations and new artwork, then keep your collection
+          close wherever you go.
         </p>
         <div className="stat-row">
           <span>Daily packs</span>
           <span>Wonder picks</span>
           <span>Quick battles</span>
         </div>
+      </div>
+    </section>
+  );
+}
+
+function AboutTcg() {
+  return (
+    <section
+      className="section about-tcg-section reveal"
+      style={{
+        backgroundImage: `linear-gradient(rgba(248, 252, 255, 0.94), rgba(248, 252, 255, 0.94)), url(${asset("/assets/poke-pattern.png")})`
+      }}
+    >
+      <div>
+        <p className="eyebrow">About the Pokémon Trading Card Game</p>
+        <h2>Start with collecting, then discover the game behind the cards.</h2>
+      </div>
+      <div className="about-copy">
+        <p>
+          The Pokémon Trading Card Game has been enjoyed by fans around the world for decades.
+          Pokémon TCG Pocket keeps the joy of opening packs and building a collection at the center
+          while making each session quick, visual, and easy to revisit.
+        </p>
+        <a className="secondary-link" href="https://tcg.pokemon.com/en-us/">
+          Learn about Pokémon TCG
+        </a>
       </div>
     </section>
   );
@@ -585,6 +341,10 @@ function ImmersiveTabs() {
       <div className="section-heading">
         <p className="eyebrow">Immersive Cards</p>
         <h2>Immersive cards</h2>
+        <p>
+          Some cards let you leap into the world of their illustration, turning a favorite pull
+          into a small scene you can linger on.
+        </p>
       </div>
       <div className="tabs-layout">
         <div className="tab-list" role="tablist" aria-label="Immersive card elements">
@@ -761,12 +521,11 @@ export default function Home() {
       <Hero reducedMotion={reducedMotion} onToggleMotion={() => setReducedMotion((v) => !v)} />
       <main>
         <StoreCta />
-        <PackReveal reducedMotion={reducedMotion} />
         <VideoDetails onOpen={() => setModalOpen(true)} />
-        <CardCarousel reducedMotion={reducedMotion} />
         <NewsGrid />
         <GameOverview />
         <ImmersiveTabs />
+        <AboutTcg />
         <Newsletter />
       </main>
       <Footer />
