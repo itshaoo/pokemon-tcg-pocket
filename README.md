@@ -53,7 +53,7 @@ After the first version, I refined the project by matching the official backgrou
 
 5. What would you improve with one more day?
 
-   With one more day, I would focus on deeper polish and validation: testing the page on more real device sizes, improving accessibility details such as keyboard navigation and focus states, optimizing image and video loading performance, and fine-tuning spacing against the official reference. I would also add small interaction improvements only where they make the experience clearer, rather than adding animation for its own sake.
+   With one more day, I would focus on deeper polish and validation: testing the page on more real device sizes, and fine-tuning spacing against the official reference. I would also add small interaction improvements only where they make the experience clearer, rather than adding animation for its own sake.
 
 ## Notes
 
