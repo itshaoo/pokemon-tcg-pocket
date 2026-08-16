@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const basePath = process.env.NODE_ENV === "production" ? "/pokemon-tcg-pocket" : "";
 const asset = (path: string) => `${basePath}${path}`;
@@ -10,74 +10,25 @@ const officialTrailerEmbed =
 
 type NewsItem = {
   title: string;
-  category: string;
   image: string;
-  date: string;
-};
-
-type TabItem = {
-  id: string;
-  label: string;
-  title: string;
-  description: string;
-  image: string;
-  accent: string;
 };
 
 const newsItems: NewsItem[] = [
   {
     title: "Discover Your Sense of Wonder in Pokémon TCG Pocket",
-    category: "Expansion",
-    image: "/assets/news-wonder.webp",
-    date: "Aug 2026"
+    image: "/assets/news-wonder.webp"
   },
   {
     title: "Build Your Dream Deck in Pokémon TCG Pocket",
-    category: "Strategy",
-    image: "/assets/news-deck.webp",
-    date: "Guide"
+    image: "/assets/news-deck.webp"
   },
   {
-    title: "A Guide to Collecting Cards and Wonder Picks",
-    category: "Collecting",
-    image: "/assets/news-collectors.webp",
-    date: "Tips"
+    title: "Pokémon TCG Pocket Collecting Guide",
+    image: "/assets/news-collectors.webp"
   },
   {
-    title: "Visit the Pokémon TCG Pocket Community Forums",
-    category: "Community",
-    image: "/assets/news-community.jpg",
-    date: "Forum"
-  }
-];
-
-const tabItems: TabItem[] = [
-  {
-    id: "lightning",
-    label: "Lightning",
-    title: "Cards that spark to life",
-    description:
-      "Swipe through immersive artwork that opens like a tiny animated scene, built for the quick rhythm of mobile play.",
-    image: "/assets/immersive-pikachu.webp",
-    accent: "#ffce25"
-  },
-  {
-    id: "fire",
-    label: "Fire",
-    title: "Big moments in every pack",
-    description:
-      "Foil shine, bold shadows, and deep color make rare pulls feel like a reveal worth pausing for.",
-    image: "/assets/charizard-card.webp",
-    accent: "#ff6848"
-  },
-  {
-    id: "water",
-    label: "Water",
-    title: "Collect at your own pace",
-    description:
-      "A calm collection flow keeps cards easy to browse, compare, favorite, and share between battles.",
-    image: "/assets/card-spread.webp",
-    accent: "#45b7ff"
+    title: "Connect with fellow Pokémon TCG Pocket players in the Pokémon Community forums.",
+    image: "/assets/news-community.jpg"
   }
 ];
 
@@ -155,12 +106,7 @@ function StoreCta() {
       style={{ backgroundImage: `url(${asset("/assets/poke-pattern.png")})` }}
     >
       <div className="section-copy">
-        <p className="eyebrow">Available Now</p>
         <h1>Pokémon Trading Card Game Pocket Is Available Now!</h1>
-        <p>
-          Open two booster packs every day at no cost, collect digital cards, and discover
-          immersive artwork made for mobile.
-        </p>
         <div className="store-badges" aria-label="Download links">
           <a href="https://apps.apple.com/app/id6479970832?mt=8">
             <img src={asset("/assets/app-store-badge.webp")} alt="Download on the App Store" />
@@ -170,13 +116,19 @@ function StoreCta() {
           </a>
         </div>
       </div>
-      <div
-        className="store-card"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)), url(${asset("/assets/poke-pattern.png")})`
-        }}
-      >
-        <p className="eyebrow">Official Web Store</p>
+    </section>
+  );
+}
+
+function WebStore() {
+  return (
+    <section
+      className="section web-store-section reveal"
+      style={{
+        backgroundImage: `linear-gradient(rgba(232, 244, 255, 0.92), rgba(232, 244, 255, 0.92)), url(${asset("/assets/poke-pattern.png")})`
+      }}
+    >
+      <div className="web-store-copy">
         <h2>The official Pokémon Trading Card Game Pocket Web Store is now live!</h2>
         <a className="primary-button" href="https://store.pokemontcgpocket.com/en-US">
           Shop Now
@@ -201,14 +153,10 @@ function VideoDetails({
     >
       <div className="details-grid">
         <div>
-          <p className="eyebrow">Details</p>
           <h2>Pokémon TCG Pocket Details!</h2>
-          <p>
-            Catch this quick feature reel to learn how collecting, Wonder Picks, and streamlined
-            battles fit into a daily mobile card experience.
-          </p>
+          <p>Catch this video to learn more about the gameplay and features of this game.</p>
           <button className="secondary-button" type="button" onClick={onOpen}>
-            Watch Trailer
+            Learn more
           </button>
         </div>
         <button className="video-poster" type="button" onClick={onOpen} aria-label="Open trailer">
@@ -233,7 +181,6 @@ function NewsGrid() {
       }}
     >
       <div className="section-heading">
-        <p className="eyebrow">Latest News</p>
         <h2>Latest News</h2>
       </div>
       <div className="news-grid">
@@ -245,11 +192,8 @@ function NewsGrid() {
           >
             <img src={asset(item.image)} alt="" />
             <div>
-              <p>
-                {item.category} · {item.date}
-              </p>
               <h3>{item.title}</h3>
-              <a href="#details">Learn more</a>
+              <a href="https://tcgpocket.pokemon.com/en-us/news/">Learn more</a>
             </div>
           </article>
         ))}
@@ -257,9 +201,6 @@ function NewsGrid() {
       <article className="forum-banner reveal-item">
         <img src={asset(forumItem.image)} alt="" />
         <div>
-          <p>
-            {forumItem.category} · {forumItem.date}
-          </p>
           <h3>{forumItem.title}</h3>
           <a href="https://community.pokemon.com/en-us/categories/tcg-pocket">
             Visit Forums
@@ -277,18 +218,17 @@ function GameOverview() {
         <img src={asset("/assets/card-spread.webp")} alt="" />
       </div>
       <div className="overview-copy">
-        <p className="eyebrow">Collect Anywhere</p>
         <h2>Pokémon Trading Card Game Pocket</h2>
         <p>
-          Experience the fun of collecting Pokémon TCG cards in a new digital format. Open packs,
-          discover cards with nostalgic illustrations and new artwork, then keep your collection
-          close wherever you go.
+          Experience the fun of collecting Pokémon Trading Card Game (TCG) cards with Pokémon
+          Trading Card Game Pocket, an upcoming game for iOS and Android devices from Creatures
+          Inc., the original developers of the Pokémon TCG, and DeNA Co., Ltd.
         </p>
-        <div className="stat-row">
-          <span>Daily packs</span>
-          <span>Wonder picks</span>
-          <span>Quick battles</span>
-        </div>
+        <p>
+          In this game, you will be able to open two booster packs every day at no cost. You can
+          collect digital cards featuring nostalgic artwork from the past as well as brand-new cards
+          that are exclusive to Pokémon Trading Card Game Pocket.
+        </p>
       </div>
     </section>
   );
@@ -303,109 +243,55 @@ function AboutTcg() {
       }}
     >
       <div>
-        <p className="eyebrow">About the Pokémon Trading Card Game</p>
-        <h2>Start with collecting, then discover the game behind the cards.</h2>
+        <h2>About the Pokémon Trading Card Game</h2>
       </div>
       <div className="about-copy">
         <p>
-          The Pokémon Trading Card Game has been enjoyed by fans around the world for decades.
-          Pokémon TCG Pocket keeps the joy of opening packs and building a collection at the center
-          while making each session quick, visual, and easy to revisit.
+          Debuting in October 1996, the Pokémon Trading Card Game is based on the world introduced
+          in the Pokémon video game series. Players can collect cards featuring their favorite
+          Pokémon characters, build powerful decks, and face off against opponents in strategic
+          battles.
         </p>
-        <a className="secondary-link" href="https://tcg.pokemon.com/en-us/">
-          Learn about Pokémon TCG
-        </a>
+        <p>
+          This highly social game has been sold in 14 languages and has been played in 89 countries
+          or regions, making it a great way for fans around the world to experience the world of
+          Pokémon!
+        </p>
       </div>
     </section>
   );
 }
 
-function ImmersiveTabs() {
-  const [activeId, setActiveId] = useState(tabItems[0].id);
-  const active = useMemo(
-    () => tabItems.find((tab) => tab.id === activeId) ?? tabItems[0],
-    [activeId]
-  );
-
+function ImmersiveCards() {
   return (
     <section
       id="cards"
-      className="section tabs-section reveal"
-      style={
-        {
-          "--accent": active.accent,
-          backgroundImage: `linear-gradient(180deg, rgba(18, 39, 77, 0.9), rgba(27, 62, 126, 0.9)), url(${asset("/assets/card-spread.webp")})`
-        } as React.CSSProperties
-      }
+      className="section immersive-section reveal"
+      style={{
+        backgroundImage: `linear-gradient(180deg, rgba(18, 39, 77, 0.86), rgba(27, 62, 126, 0.86)), url(${asset("/assets/immersive-pikachu.webp")})`
+      }}
     >
-      <div className="section-heading">
-        <p className="eyebrow">Immersive Cards</p>
+      <div className="immersive-copy">
         <h2>Immersive cards</h2>
         <p>
-          Some cards let you leap into the world of their illustration, turning a favorite pull
-          into a small scene you can linger on.
+          Be on the lookout for new “immersive cards,” which will make you feel as though you’ve
+          leapt into the world of the card’s illustration.
         </p>
-      </div>
-      <div className="tabs-layout">
-        <div className="tab-list" role="tablist" aria-label="Immersive card elements">
-          {tabItems.map((tab) => (
-            <button
-              key={tab.id}
-              id={`tab-${tab.id}`}
-              type="button"
-              role="tab"
-              aria-selected={tab.id === active.id}
-              aria-controls={`panel-${tab.id}`}
-              onClick={() => setActiveId(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
-        <article
-          key={active.id}
-          id={`panel-${active.id}`}
-          role="tabpanel"
-          aria-labelledby={`tab-${active.id}`}
-          className="tab-panel"
-        >
-          <img src={asset(active.image)} alt="" />
-          <div>
-            <h3>{active.title}</h3>
-            <p>{active.description}</p>
-          </div>
-        </article>
       </div>
     </section>
   );
 }
 
 function Newsletter() {
-  const [submitted, setSubmitted] = useState(false);
-
   return (
     <section className="section newsletter-section reveal">
       <div>
-        <p className="eyebrow">Newsletter</p>
         <h2>Sign up for the newsletter!</h2>
-        <p>Get updates about new cards, events, and official Pokémon TCG Pocket news.</p>
+        <p>Be among the first to receive new game announcements!</p>
       </div>
-      <form
-        className="newsletter-form"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setSubmitted(true);
-        }}
-      >
-        <label htmlFor="email">Email address</label>
-        <div>
-          <input id="email" type="email" placeholder="trainer@example.com" required />
-          <button type="submit">Subscribe</button>
-        </div>
-        <p aria-live="polite">
-          {submitted ? "Thanks! This demo form is ready for a real newsletter service." : " "}
-        </p>
-      </form>
+      <a className="primary-button" href="https://www.pokemon.com/us/newsletter">
+        Subscribe
+      </a>
     </section>
   );
 }
@@ -448,7 +334,7 @@ function VideoModal({
         />
         <div>
           <h2 id="trailer-title">Pokémon TCG Pocket Details!</h2>
-          <p>Watch the official trailer in-page, then return to the card experience.</p>
+          <p>Catch this video to learn more about the gameplay and features of this game.</p>
         </div>
       </div>
     </div>
@@ -459,9 +345,24 @@ function Footer() {
   return (
     <footer className="site-footer">
       <img src={asset("/assets/tcgpocket-logo.webp")} alt="Pokémon Trading Card Game Pocket" />
+      <nav aria-label="Footer links">
+        <a href="https://www.pokemon.com/us/privacy-notice">Privacy Notice</a>
+        <a href="https://www.pokemon.com/us/terms-of-use">Terms of Use</a>
+        <a href="https://support.pokemon.com/">Customer Service</a>
+        <a href="https://community.pokemon.com/en-us/categories/tcg-pocket">Forums</a>
+      </nav>
+      <p>Products, contents, features, etc. subject to changes.</p>
+      <p>Screenshots and footage are from a product in development and not final.</p>
+      <p>Free-to-start; optional in-game purchases available.</p>
+      <p>Cards may vary by pack.</p>
       <p>
-        Fan-made interview project inspired by the official Pokémon Trading Card Game Pocket
-        website.
+        Android, Google Play and the Google Play logo are trademarks of Google LLC. Apple, App
+        Store, and the Apple logo are trademarks of Apple Inc., registered in the U.S. and other
+        countries.
+      </p>
+      <p>
+        ©2024 Pokémon. ©1995–2024 Nintendo / Creatures Inc. / GAME FREAK inc. ©2024 DeNA Co., Ltd.
+        TM, ® Nintendo.
       </p>
     </footer>
   );
@@ -521,10 +422,11 @@ export default function Home() {
       <Hero reducedMotion={reducedMotion} onToggleMotion={() => setReducedMotion((v) => !v)} />
       <main>
         <StoreCta />
+        <WebStore />
         <VideoDetails onOpen={() => setModalOpen(true)} />
         <NewsGrid />
         <GameOverview />
-        <ImmersiveTabs />
+        <ImmersiveCards />
         <AboutTcg />
         <Newsletter />
       </main>

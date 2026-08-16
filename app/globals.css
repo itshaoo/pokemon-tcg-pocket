@@ -379,6 +379,8 @@ img {
 
 .section-copy,
 .store-card,
+.web-store-copy,
+.about-copy,
 .overview-copy {
   min-width: 0;
 }
@@ -458,6 +460,25 @@ p {
 
 .store-card h2 {
   font-size: clamp(1.8rem, 3vw, 2.8rem);
+}
+
+.web-store-section {
+  display: grid;
+  justify-items: center;
+  background-color: #e8f4ff;
+  background-size: 220px auto;
+  text-align: center;
+}
+
+.web-store-copy {
+  display: grid;
+  justify-items: center;
+  max-width: 860px;
+  gap: 24px;
+}
+
+.web-store-copy h2 {
+  margin-bottom: 0;
 }
 
 .primary-button,
@@ -1116,21 +1137,13 @@ p {
   padding: 20px;
 }
 
-.news-card p {
-  margin-bottom: 8px;
-  color: var(--blue-700);
-  font-size: 0.78rem;
-  font-weight: 900;
-}
-
 .news-card h3 {
   min-height: 84px;
   color: var(--blue-900);
 }
 
 .news-card a,
-.forum-banner a,
-.secondary-link {
+.forum-banner a {
   color: var(--blue-700);
   font-weight: 900;
 }
@@ -1171,13 +1184,6 @@ p {
   padding: 34px;
 }
 
-.forum-banner p {
-  margin-bottom: 8px;
-  color: var(--blue-700);
-  font-size: 0.78rem;
-  font-weight: 900;
-}
-
 .forum-banner h3 {
   max-width: 560px;
   color: var(--blue-900);
@@ -1216,12 +1222,6 @@ p {
 
 .about-copy p {
   margin-bottom: 18px;
-}
-
-.secondary-link {
-  display: inline-flex;
-  min-height: 42px;
-  align-items: center;
 }
 
 .overview-media {
@@ -1266,6 +1266,25 @@ p {
   background: var(--blue-700);
   color: #fff;
   transform: translateY(-3px);
+}
+
+.immersive-section {
+  display: grid;
+  min-height: 620px;
+  align-items: center;
+  overflow: hidden;
+  background-color: #17376f;
+  background-position: center;
+  background-size: cover;
+}
+
+.immersive-copy {
+  max-width: 580px;
+}
+
+.immersive-section h2,
+.immersive-section p {
+  color: #fff;
 }
 
 .tabs-section {
@@ -1356,7 +1375,7 @@ p {
 
 .newsletter-section {
   display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(320px, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 40px;
   align-items: center;
   background: #eaf4ff;
@@ -1418,6 +1437,7 @@ p {
 .site-footer {
   display: grid;
   place-items: center;
+  gap: 12px;
   padding: 58px 24px;
   background: #142451;
   text-align: center;
@@ -1425,14 +1445,31 @@ p {
 
 .site-footer img {
   width: 190px;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   animation: logoFloat 5s ease-in-out infinite;
 }
 
+.site-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 22px;
+  margin: 6px 0 10px;
+}
+
+.site-footer a {
+  color: #fff;
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
 .site-footer p {
-  max-width: 620px;
+  max-width: 820px;
   margin-bottom: 0;
   color: rgba(255, 255, 255, 0.76);
+  font-size: 0.78rem;
+  line-height: 1.45;
 }
 
 .modal-backdrop {
@@ -1696,6 +1733,7 @@ p {
   .overview-section,
   .forum-banner,
   .about-tcg-section,
+  .web-store-section,
   .tabs-layout,
   .newsletter-section {
     grid-template-columns: 1fr;
@@ -1801,6 +1839,10 @@ p {
   .newsletter-form,
   .tab-panel {
     padding: 24px;
+  }
+
+  .immersive-section {
+    min-height: 520px;
   }
 
   .carousel-stage {
