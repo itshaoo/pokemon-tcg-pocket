@@ -30,6 +30,13 @@ type TabItem = {
   accent: string;
 };
 
+type PackCard = {
+  title: string;
+  rarity: string;
+  image: string;
+  accent: string;
+};
+
 const navLinks = [
   { href: "#available", label: "Available Now" },
   { href: "#details", label: "Details" },
@@ -121,6 +128,27 @@ const tabItems: TabItem[] = [
   }
 ];
 
+const packCards: PackCard[] = [
+  {
+    title: "Pikachu ex",
+    rarity: "Immersive rare",
+    image: "/assets/immersive-pikachu.webp",
+    accent: "#ffce25"
+  },
+  {
+    title: "Charizard ex",
+    rarity: "Special art",
+    image: "/assets/charizard-card.webp",
+    accent: "#ff6848"
+  },
+  {
+    title: "Wonder Pick",
+    rarity: "Daily pull",
+    image: "/assets/news-wonder.webp",
+    accent: "#45b7ff"
+  }
+];
+
 function Header() {
   const [open, setOpen] = useState(false);
 
@@ -171,8 +199,26 @@ function Hero({
   reducedMotion: boolean;
   onToggleMotion: () => void;
 }) {
+  const heroRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero || reducedMotion) return;
+
+    const onPointerMove = (event: PointerEvent) => {
+      const rect = hero.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      hero.style.setProperty("--pointer-x", x.toFixed(3));
+      hero.style.setProperty("--pointer-y", y.toFixed(3));
+    };
+
+    hero.addEventListener("pointermove", onPointerMove);
+    return () => hero.removeEventListener("pointermove", onPointerMove);
+  }, [reducedMotion]);
+
   return (
-    <section id="top" className="hero">
+    <section id="top" className="hero" ref={heroRef}>
       <Header />
       <button
         className="motion-toggle"
@@ -188,6 +234,16 @@ function Hero({
         style={{ backgroundImage: `url(${asset("/assets/hero-fallback.jpg")})` }}
         aria-hidden="true"
       />
+      <div className="hero-glow" aria-hidden="true" />
+      <div className="floating-card card-one" aria-hidden="true">
+        Lightning
+      </div>
+      <div className="floating-card card-two" aria-hidden="true">
+        Fire
+      </div>
+      <div className="floating-card card-three" aria-hidden="true">
+        Water
+      </div>
       <div className="hero-content">
         <img
           className="hero-logo"
@@ -211,7 +267,7 @@ function StoreCta() {
   return (
     <section
       id="available"
-      className="section pattern-section available-section"
+      className="section pattern-section available-section reveal"
       style={{ backgroundImage: `url(${asset("/assets/poke-pattern.png")})` }}
     >
       <div className="section-copy">
@@ -238,6 +294,69 @@ function StoreCta() {
   );
 }
 
+function PackReveal({ reducedMotion }: { reducedMotion: boolean }) {
+  const [opened, setOpened] = useState(false);
+  const [round, setRound] = useState(0);
+
+  const togglePack = () => {
+    if (opened) {
+      setOpened(false);
+      window.setTimeout(() => setRound((value) => value + 1), reducedMotion ? 0 : 220);
+      return;
+    }
+    setOpened(true);
+  };
+
+  return (
+    <section className={`section pack-section ${opened ? "is-open" : ""}`}>
+      <div className="pack-copy">
+        <p className="eyebrow">Pack Opening</p>
+        <h2>Make every pull feel like a reveal.</h2>
+        <p>
+          Fresh booster packs arrive with layered foil, bright card art, and a little burst of
+          anticipation before the collection grows.
+        </p>
+        <button className="primary-button" type="button" onClick={togglePack}>
+          {opened ? "Reset Pack" : "Open Pack"}
+        </button>
+      </div>
+      <div className="pack-stage" aria-live="polite">
+        <div className="pack-burst" aria-hidden="true" />
+        <button
+          className="booster-pack"
+          type="button"
+          onClick={togglePack}
+          aria-label={opened ? "Reset pack opening" : "Open booster pack"}
+        >
+          <span>Pokémon</span>
+          <strong>TCG Pocket</strong>
+          <em>Booster Pack</em>
+        </button>
+        <div className="revealed-cards" key={round}>
+          {packCards.map((card, index) => (
+            <article
+              className="pull-card"
+              key={card.title}
+              style={
+                {
+                  "--pull-accent": card.accent,
+                  "--pull-index": index
+                } as React.CSSProperties
+              }
+            >
+              <img src={asset(card.image)} alt="" />
+              <div>
+                <span>{card.rarity}</span>
+                <h3>{card.title}</h3>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function VideoDetails({
   onOpen
 }: {
@@ -246,7 +365,7 @@ function VideoDetails({
   return (
     <section
       id="details"
-      className="section details-section"
+      className="section details-section reveal"
       style={{
         backgroundImage: `linear-gradient(180deg, rgba(14, 43, 91, 0.86), rgba(16, 63, 130, 0.8)), url(${asset("/assets/devices-bg.jpg")})`
       }}
@@ -292,7 +411,7 @@ function CardCarousel({ reducedMotion }: { reducedMotion: boolean }) {
 
   return (
     <section
-      className="section carousel-section"
+      className="section carousel-section reveal"
       style={{ "--accent": active.accent } as React.CSSProperties}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
@@ -331,6 +450,7 @@ function CardCarousel({ reducedMotion }: { reducedMotion: boolean }) {
             <article
               key={card.id}
               className={`feature-card ${cardIndex === index ? "active" : ""}`}
+              style={{ "--card-accent": card.accent } as React.CSSProperties}
               aria-hidden={cardIndex !== index}
             >
               <img src={asset(card.image)} alt="" />
@@ -363,7 +483,7 @@ function NewsGrid() {
   return (
     <section
       id="news"
-      className="section news-section"
+      className="section news-section reveal"
       style={{
         backgroundImage: `linear-gradient(rgba(222, 238, 255, 0.92), rgba(222, 238, 255, 0.92)), url(${asset("/assets/poke-pattern.png")})`
       }}
@@ -373,8 +493,12 @@ function NewsGrid() {
         <h2>Latest News</h2>
       </div>
       <div className="news-grid">
-        {newsItems.map((item) => (
-          <article className="news-card" key={item.title}>
+        {newsItems.map((item, itemIndex) => (
+          <article
+            className="news-card reveal-item"
+            key={item.title}
+            style={{ "--delay": `${itemIndex * 90}ms` } as React.CSSProperties}
+          >
             <img src={asset(item.image)} alt="" />
             <div>
               <p>
@@ -392,7 +516,7 @@ function NewsGrid() {
 
 function GameOverview() {
   return (
-    <section className="section overview-section">
+    <section className="section overview-section reveal">
       <div className="overview-media">
         <img src={asset("/assets/card-spread.webp")} alt="" />
       </div>
@@ -423,7 +547,7 @@ function ImmersiveTabs() {
   return (
     <section
       id="cards"
-      className="section tabs-section"
+      className="section tabs-section reveal"
       style={
         {
           "--accent": active.accent,
@@ -452,6 +576,7 @@ function ImmersiveTabs() {
           ))}
         </div>
         <article
+          key={active.id}
           id={`panel-${active.id}`}
           role="tabpanel"
           aria-labelledby={`tab-${active.id}`}
@@ -472,7 +597,7 @@ function Newsletter() {
   const [submitted, setSubmitted] = useState(false);
 
   return (
-    <section className="section newsletter-section">
+    <section className="section newsletter-section reveal">
       <div>
         <p className="eyebrow">Newsletter</p>
         <h2>Sign up for the newsletter!</h2>
@@ -567,11 +692,47 @@ export default function Home() {
     sessionStorage.setItem("reduced-motion", String(reducedMotion));
   }, [reducedMotion]);
 
+  useEffect(() => {
+    const revealItems = Array.from(document.querySelectorAll<HTMLElement>(".reveal, .reveal-item"));
+
+    if (reducedMotion || !("IntersectionObserver" in window)) {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+      return;
+    }
+
+    revealItems.forEach((item) => item.classList.remove("is-visible"));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.16 }
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+    window.requestAnimationFrame(() => {
+      revealItems.forEach((item) => {
+        const rect = item.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
+          item.classList.add("is-visible");
+          observer.unobserve(item);
+        }
+      });
+    });
+    return () => observer.disconnect();
+  }, [reducedMotion]);
+
   return (
     <>
       <Hero reducedMotion={reducedMotion} onToggleMotion={() => setReducedMotion((v) => !v)} />
       <main>
         <StoreCta />
+        <PackReveal reducedMotion={reducedMotion} />
         <VideoDetails onOpen={() => setModalOpen(true)} />
         <CardCarousel reducedMotion={reducedMotion} />
         <NewsGrid />
