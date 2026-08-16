@@ -5,11 +5,21 @@ import { useEffect, useRef, useState } from "react";
 const basePath = process.env.NODE_ENV === "production" ? "/pokemon-tcg-pocket" : "";
 const asset = (path: string) => `${basePath}${path}`;
 const officialHeroVideo = "https://tcgpocket.pokemon.com/videos/background-video.mp4";
-const officialTrailerEmbed =
+const officialShowcaseEmbed =
   "https://www.youtube.com/embed/W_s8I736G2k?autoplay=1&rel=0&modestbranding=1";
+const officialDetailsEmbed =
+  "https://www.youtube.com/embed/16duP6ga_Q8?autoplay=1&rel=0&modestbranding=1";
 const officialCharizardVideo = "https://tcgpocket.pokemon.com/videos/charizard_revised_en.mp4";
 const officialImmersiveVideo =
   "https://tcgpocket.pokemon.com/videos/pikachuimmersive_revised_en.mp4";
+
+type ModalVideo = {
+  description: string;
+  src: string;
+  title: string;
+};
+
+type OpenVideo = (src?: string, title?: string) => void;
 
 type NewsItem = {
   title: string;
@@ -45,7 +55,11 @@ function ImageDivider({
   className?: string;
 }) {
   return (
-    <div className={`image-divider ${className}`} aria-hidden={alt ? undefined : true}>
+    <div
+      className={`image-divider ${className}`}
+      aria-hidden={alt ? undefined : true}
+      style={{ "--poke-pattern": `url(${asset("/assets/poke-pattern.png")})` } as React.CSSProperties}
+    >
       <img src={asset(src)} alt={alt} />
     </div>
   );
@@ -175,13 +189,22 @@ function WebStore() {
   );
 }
 
-function DeviceShowcase() {
+function DeviceShowcase({
+  onOpen
+}: {
+  onOpen: OpenVideo;
+}) {
   return (
     <section className="device-showcase reveal">
-      <img
-        src={asset("/assets/official-devices.webp")}
-        alt="Pokémon Trading Card Game Pocket"
-      />
+      <button
+        className="video-poster"
+        type="button"
+        onClick={() => onOpen(officialShowcaseEmbed, "Pokémon Trading Card Game Pocket")}
+        aria-label="Open Pokémon TCG Pocket video"
+      >
+        <img src={asset("/assets/news-wonder.webp")} alt="Pokémon Trading Card Game Pocket" />
+        <span className="play-button" aria-hidden="true" />
+      </button>
     </section>
   );
 }
@@ -189,7 +212,7 @@ function DeviceShowcase() {
 function VideoDetails({
   onOpen
 }: {
-  onOpen: () => void;
+  onOpen: OpenVideo;
 }) {
   return (
     <section id="details" className="section details-section reveal">
@@ -197,11 +220,11 @@ function VideoDetails({
         <div>
           <h2>Pokémon TCG Pocket Details!</h2>
           <p>Catch this video to learn more about the gameplay and features of this game.</p>
-          <button className="secondary-button" type="button" onClick={onOpen}>
+          <button className="secondary-button" type="button" onClick={() => onOpen()}>
             Learn more
           </button>
         </div>
-        <button className="video-poster" type="button" onClick={onOpen} aria-label="Open trailer">
+        <button className="video-poster" type="button" onClick={() => onOpen()} aria-label="Open trailer">
           <img src={asset("/assets/trailer-thumbnail.jpg")} alt="Pokémon TCG Pocket trailer" />
           <span className="play-button" aria-hidden="true" />
         </button>
@@ -213,7 +236,7 @@ function VideoDetails({
 function DevicesAnnouncement({
   onOpen
 }: {
-  onOpen: () => void;
+  onOpen: OpenVideo;
 }) {
   return (
     <div
@@ -227,7 +250,7 @@ function DevicesAnnouncement({
     >
       <StoreCta />
       <WebStore />
-      <DeviceShowcase />
+      <DeviceShowcase onOpen={onOpen} />
       <VideoDetails onOpen={onOpen} />
     </div>
   );
@@ -335,10 +358,7 @@ function FeatureVideos({ reducedMotion }: { reducedMotion: boolean }) {
 
 function AboutTcg() {
   return (
-    <section
-      className="about-tcg-section reveal"
-      style={{ "--cards-bg": `url(${asset("/assets/tcg-cards-bg-graphic.png")})` } as React.CSSProperties}
-    >
+    <section className="about-tcg-section reveal">
       <div className="about-header-media">
         <img src={asset("/assets/cardspread-header.webp")} alt="" />
       </div>
@@ -376,7 +396,10 @@ function Newsletter() {
 
 function OfficialLowerSections() {
   return (
-    <div className="official-lower-bg">
+    <div
+      className="official-lower-bg"
+      style={{ "--cards-bg": `url(${asset("/assets/tcg-cards-bg-graphic.png")})` } as React.CSSProperties}
+    >
       <AboutTcg />
       <ImageDivider src="/assets/pokeball-divider.webp" className="pokeball-divider" />
       <Newsletter />
@@ -385,11 +408,17 @@ function OfficialLowerSections() {
 }
 
 function VideoModal({
+  description,
   open,
-  onClose
+  onClose,
+  src,
+  title
 }: {
+  description: string;
   open: boolean;
   onClose: () => void;
+  src: string;
+  title: string;
 }) {
   useEffect(() => {
     if (!open) return;
@@ -415,14 +444,14 @@ function VideoModal({
           ×
         </button>
         <iframe
-          src={officialTrailerEmbed}
-          title="Pokémon TCG Pocket: Ruler of the Skies | Official Trailer"
+          src={src}
+          title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
         />
         <div>
-          <h2 id="trailer-title">Pokémon TCG Pocket Details!</h2>
-          <p>Catch this video to learn more about the gameplay and features of this game.</p>
+          <h2 id="trailer-title">{title}</h2>
+          <p>{description}</p>
         </div>
       </div>
     </div>
@@ -473,8 +502,16 @@ function Footer() {
 }
 
 export default function Home() {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalVideo, setModalVideo] = useState<ModalVideo | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+
+  const openVideo = (src = officialDetailsEmbed, title = "Pokémon TCG Pocket Details!") => {
+    setModalVideo({
+      description: "Catch this video to learn more about the gameplay and features of this game.",
+      src,
+      title
+    });
+  };
 
   useEffect(() => {
     const preferred = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -484,6 +521,44 @@ export default function Home() {
   useEffect(() => {
     document.documentElement.dataset.motion = reducedMotion ? "reduced" : "full";
     sessionStorage.setItem("reduced-motion", String(reducedMotion));
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    if (reducedMotion) {
+      root.style.removeProperty("--scroll-blue-x");
+      root.style.removeProperty("--scroll-blue-y");
+      root.style.removeProperty("--scroll-white-x");
+      root.style.removeProperty("--scroll-white-y");
+      root.style.removeProperty("--scroll-soft-y");
+      return;
+    }
+
+    let frame = 0;
+
+    const updateScrollVars = () => {
+      frame = 0;
+      const scrollY = window.scrollY;
+      root.style.setProperty("--scroll-blue-x", `${scrollY * -0.018}px`);
+      root.style.setProperty("--scroll-blue-y", `${scrollY * -0.032}px`);
+      root.style.setProperty("--scroll-white-x", `${scrollY * 0.012}px`);
+      root.style.setProperty("--scroll-white-y", `${scrollY * -0.026}px`);
+      root.style.setProperty("--scroll-soft-y", `${scrollY * -0.018}px`);
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateScrollVars);
+    };
+
+    updateScrollVars();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, [reducedMotion]);
 
   useEffect(() => {
@@ -536,7 +611,7 @@ export default function Home() {
     <>
       <Hero reducedMotion={reducedMotion} onToggleMotion={() => setReducedMotion((v) => !v)} />
       <main>
-        <DevicesAnnouncement onOpen={() => setModalOpen(true)} />
+        <DevicesAnnouncement onOpen={openVideo} />
         <ImageDivider src="/assets/top-divider.webp" className="top-divider" />
         <NewsGrid />
         <ImageDivider src="/assets/bottom-divider.webp" className="bottom-divider" />
@@ -544,7 +619,13 @@ export default function Home() {
         <OfficialLowerSections />
       </main>
       <Footer />
-      <VideoModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      <VideoModal
+        description={modalVideo?.description ?? ""}
+        open={modalVideo !== null}
+        onClose={() => setModalVideo(null)}
+        src={modalVideo?.src ?? officialDetailsEmbed}
+        title={modalVideo?.title ?? "Pokémon TCG Pocket Details!"}
+      />
     </>
   );
 }
