@@ -1,4 +1,4 @@
-# Pokémon Trading Card Game Pocket - Web Interview
+# Pokémon Trading Card Game Pocket - Intern Web Interview
 
 A high-polish Next.js recreation inspired by the official Pokémon Trading Card Game Pocket website for the 2026 web game intern technical interview.
 
@@ -16,50 +16,6 @@ https://itshaoo.github.io/pokemon-tcg-pocket/
 - Plain CSS
 - GitHub Pages static export
 
-## Features
-
-- Responsive desktop and mobile layout
-- Full-screen hero inspired by the official landing page
-- App Store and Google Play call-to-action badges
-- Card carousel with autoplay, arrows, dots, hover pause, and mobile swipe
-- Immersive card tabs for Lightning, Fire, and Water themes
-- Trailer preview modal with Escape and overlay close behavior
-- Reduced motion toggle
-- Mobile navigation menu
-- News cards, game overview, newsletter demo form, and footer
-
-## Getting Started
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Run the development server:
-
-```bash
-npm run dev
-```
-
-Build the static site:
-
-```bash
-npm run build
-```
-
-The exported GitHub Pages-ready site is generated in `out/`.
-
-## Deployment
-
-This project is configured for GitHub Pages under:
-
-```text
-/pokemon-tcg-pocket/
-```
-
-The included GitHub Actions workflow builds the static export and deploys it to Pages when changes are pushed to `main`.
-
 ## AI Usage
 
 ### Tools
@@ -68,14 +24,14 @@ The included GitHub Actions workflow builds the static export and deploys it to 
 
 ### How AI Helped
 
-- Interpreted the assignment README and official reference website.
-- Planned the page structure, visual direction, and interactive components.
-- Generated the initial Next.js components, TypeScript data structures, and responsive CSS.
-- Helped configure static export and GitHub Pages deployment.
+- Suggested a page structure, component plan, and interaction checklist that matched the expected scope of a front-end intern project.
+- Assisted with implementing Next.js components, TypeScript data models, and responsive CSS.
+- Helped debug layout, motion, and responsive issues during iteration, including mobile ordering, hover states, modal behavior, and scroll-triggered polish.
+- Provided wording support for documentation, but the final design direction, content choices, asset choices, and acceptance decisions were reviewed and adjusted by me.
 
 ### What I Changed
 
-I selected the Pokémon TCG Pocket direction, chose a high-polish visual target, confirmed the interaction set, and guided decisions about official asset usage, GitHub Pages path, and README content. I reviewed the final behavior goals so the implementation matched the assignment requirements.
+After the first version, I refined the project by matching the official background sections more closely, replacing the Shop Now preview with a playable video modal, adjusting the Latest News dividers and overflow, resizing the About and Sign up sections, adding yellow borders around the lower blue section, improving mobile ordering for the Immersive cards section, changing the Details text color, adding a Back-to-top button, and polishing hover and scroll animations.
 
 ## Reflection
 
@@ -85,19 +41,19 @@ I selected the Pokémon TCG Pocket direction, chose a high-polish visual target,
 
 2. Why did you choose it?
 
-   I chose it because the site has a strong game-focused visual identity, clear mobile-first product storytelling, and natural opportunities for interactive card UI.
+   I chose it because the company is working on a card game, so Pokémon TCG Pocket felt like a relevant reference. The official website also has more visual elements, sections, videos, and interactive details, which made it a good choice for showing front-end implementation skills.
 
 3. Which AI tools did you use?
 
-   I used ChatGPT / Codex for planning, implementation, debugging, responsive design, and deployment setup.
+   I used ChatGPT / Codex as a coding and design assistant for planning, implementation, debugging, responsive design checks, and README writing support.
 
 4. What was the most challenging part?
 
-   The most challenging part was balancing a close visual recreation with a manageable implementation scope, especially while keeping the interactions polished on both desktop and mobile.
+   The most challenging part was balancing accuracy to the official reference with a maintainable implementation. I had to keep the content close to the original site, tune animations so they felt noticeable but not distracting, and make sure the layout still worked well across desktop and mobile.
 
 5. What would you improve with one more day?
 
-   I would add more detailed scroll-triggered animations, replace the modal preview with a fully embedded trailer experience, and further refine small responsive spacing details after device testing.
+   With one more day, I would focus on deeper polish and validation: testing the page on more real device sizes, improving accessibility details such as keyboard navigation and focus states, optimizing image and video loading performance, and fine-tuning spacing against the official reference. I would also add small interaction improvements only where they make the experience clearer, rather than adding animation for its own sake.
 
 ## Notes
 
