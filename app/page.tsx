@@ -504,6 +504,7 @@ function Footer() {
 export default function Home() {
   const [modalVideo, setModalVideo] = useState<ModalVideo | null>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [showBackTop, setShowBackTop] = useState(false);
 
   const openVideo = (src = officialDetailsEmbed, title = "Pokémon TCG Pocket Details!") => {
     setModalVideo({
@@ -560,6 +561,28 @@ export default function Home() {
       window.removeEventListener("scroll", onScroll);
     };
   }, [reducedMotion]);
+
+  useEffect(() => {
+    let frame = 0;
+
+    const updateBackTop = () => {
+      frame = 0;
+      setShowBackTop(window.scrollY > window.innerHeight * 0.85);
+    };
+
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(updateBackTop);
+    };
+
+    updateBackTop();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const revealItems = Array.from(document.querySelectorAll<HTMLElement>(".reveal, .reveal-item"));
@@ -626,6 +649,14 @@ export default function Home() {
         src={modalVideo?.src ?? officialDetailsEmbed}
         title={modalVideo?.title ?? "Pokémon TCG Pocket Details!"}
       />
+      <button
+        className={`back-to-top ${showBackTop ? "is-visible" : ""}`}
+        type="button"
+        aria-label="Back to top"
+        onClick={() => window.scrollTo({ top: 0, behavior: reducedMotion ? "auto" : "smooth" })}
+      >
+        <span aria-hidden="true" />
+      </button>
     </>
   );
 }
