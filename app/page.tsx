@@ -7,6 +7,9 @@ const asset = (path: string) => `${basePath}${path}`;
 const officialHeroVideo = "https://tcgpocket.pokemon.com/videos/background-video.mp4";
 const officialTrailerEmbed =
   "https://www.youtube.com/embed/W_s8I736G2k?autoplay=1&rel=0&modestbranding=1";
+const officialCharizardVideo = "https://tcgpocket.pokemon.com/videos/charizard_revised_en.mp4";
+const officialImmersiveVideo =
+  "https://tcgpocket.pokemon.com/videos/pikachuimmersive_revised_en.mp4";
 
 type NewsItem = {
   title: string;
@@ -31,6 +34,46 @@ const newsItems: NewsItem[] = [
     image: "/assets/news-community.jpg"
   }
 ];
+
+function ImageDivider({
+  src,
+  alt = "",
+  className = ""
+}: {
+  src: string;
+  alt?: string;
+  className?: string;
+}) {
+  return (
+    <div className={`image-divider ${className}`} aria-hidden={alt ? undefined : true}>
+      <img src={asset(src)} alt={alt} />
+    </div>
+  );
+}
+
+function LoopMedia({
+  alt,
+  poster,
+  reducedMotion,
+  videoSrc
+}: {
+  alt: string;
+  poster: string;
+  reducedMotion: boolean;
+  videoSrc: string;
+}) {
+  return (
+    <div className="portrait-media">
+      {reducedMotion ? (
+        <img src={asset(poster)} alt={alt} />
+      ) : (
+        <video autoPlay loop muted playsInline poster={asset(poster)} aria-label={alt}>
+          <source src={videoSrc} type="video/mp4" />
+        </video>
+      )}
+    </div>
+  );
+}
 
 function Hero({
   reducedMotion,
@@ -70,7 +113,7 @@ function Hero({
       </button>
       <div
         className="hero-media"
-        style={{ backgroundImage: `url(${asset("/assets/hero-fallback.jpg")})` }}
+        style={{ backgroundImage: `url(${asset("/assets/banner-fallback.jpg")})` }}
         aria-hidden="true"
       />
       {!reducedMotion && (
@@ -80,7 +123,7 @@ function Hero({
           loop
           muted
           playsInline
-          poster={asset("/assets/hero-fallback.jpg")}
+          poster={asset("/assets/banner-fallback.jpg")}
           aria-hidden="true"
         >
           <source src={officialHeroVideo} type="video/mp4" />
@@ -100,13 +143,9 @@ function Hero({
 
 function StoreCta() {
   return (
-    <section
-      id="available"
-      className="section pattern-section available-section reveal"
-      style={{ backgroundImage: `url(${asset("/assets/poke-pattern.png")})` }}
-    >
+    <section id="available" className="section available-section reveal">
       <div className="section-copy">
-        <h1>Pokémon Trading Card Game Pocket Is Available Now!</h1>
+        <h1>Available Now!</h1>
         <div className="store-badges" aria-label="Download links">
           <a href="https://apps.apple.com/app/id6479970832?mt=8">
             <img src={asset("/assets/app-store-badge.webp")} alt="Download on the App Store" />
@@ -122,18 +161,27 @@ function StoreCta() {
 
 function WebStore() {
   return (
-    <section
-      className="section web-store-section reveal"
-      style={{
-        backgroundImage: `linear-gradient(rgba(232, 244, 255, 0.92), rgba(232, 244, 255, 0.92)), url(${asset("/assets/poke-pattern.png")})`
-      }}
-    >
-      <div className="web-store-copy">
+    <section className="section web-store-section reveal">
+      <div
+        className="web-store-copy"
+        style={{ "--poke-pattern": `url(${asset("/assets/poke-pattern.png")})` } as React.CSSProperties}
+      >
         <h2>The official Pokémon Trading Card Game Pocket Web Store is now live!</h2>
         <a className="primary-button" href="https://store.pokemontcgpocket.com/en-US">
           Shop Now
         </a>
       </div>
+    </section>
+  );
+}
+
+function DeviceShowcase() {
+  return (
+    <section className="device-showcase reveal">
+      <img
+        src={asset("/assets/official-devices.webp")}
+        alt="Pokémon Trading Card Game Pocket"
+      />
     </section>
   );
 }
@@ -144,13 +192,7 @@ function VideoDetails({
   onOpen: () => void;
 }) {
   return (
-    <section
-      id="details"
-      className="section details-section reveal"
-      style={{
-        backgroundImage: `linear-gradient(180deg, rgba(14, 43, 91, 0.86), rgba(16, 63, 130, 0.8)), url(${asset("/assets/devices-bg.jpg")})`
-      }}
-    >
+    <section id="details" className="section details-section reveal">
       <div className="details-grid">
         <div>
           <h2>Pokémon TCG Pocket Details!</h2>
@@ -168,6 +210,29 @@ function VideoDetails({
   );
 }
 
+function DevicesAnnouncement({
+  onOpen
+}: {
+  onOpen: () => void;
+}) {
+  return (
+    <div
+      className="tcg-devices-bg"
+      style={
+        {
+          "--devices-bg": `url(${asset("/assets/tcg-devices-bg.jpg")})`,
+          "--devices-pattern": `url(${asset("/assets/tcg-devices-bg-pattern.png")})`
+        } as React.CSSProperties
+      }
+    >
+      <StoreCta />
+      <WebStore />
+      <DeviceShowcase />
+      <VideoDetails onOpen={onOpen} />
+    </div>
+  );
+}
+
 function NewsGrid() {
   const [forumItem] = newsItems.slice(-1);
   const topStories = newsItems.slice(0, 3);
@@ -176,9 +241,7 @@ function NewsGrid() {
     <section
       id="news"
       className="section news-section reveal"
-      style={{
-        backgroundImage: `linear-gradient(rgba(222, 238, 255, 0.92), rgba(222, 238, 255, 0.92)), url(${asset("/assets/poke-pattern.png")})`
-      }}
+      style={{ "--poke-pattern": `url(${asset("/assets/poke-pattern.png")})` } as React.CSSProperties}
     >
       <div className="section-heading">
         <h2>Latest News</h2>
@@ -211,12 +274,9 @@ function NewsGrid() {
   );
 }
 
-function GameOverview() {
+function GameOverview({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <section className="section overview-section reveal">
-      <div className="overview-media">
-        <img src={asset("/assets/card-spread.webp")} alt="" />
-      </div>
       <div className="overview-copy">
         <h2>Pokémon Trading Card Game Pocket</h2>
         <p>
@@ -230,22 +290,60 @@ function GameOverview() {
           that are exclusive to Pokémon Trading Card Game Pocket.
         </p>
       </div>
+      <div className="overview-media">
+        <LoopMedia
+          alt="Pokémon Trading Card Game Pocket card animation"
+          poster="/assets/charizard-video-fallback.png"
+          reducedMotion={reducedMotion}
+          videoSrc={officialCharizardVideo}
+        />
+      </div>
     </section>
+  );
+}
+
+function ImmersiveCards({ reducedMotion }: { reducedMotion: boolean }) {
+  return (
+    <section id="cards" className="section immersive-section reveal">
+      <div className="immersive-media">
+        <LoopMedia
+          alt="Pokémon Trading Card Game Pocket immersive Pikachu card animation"
+          poster="/assets/immersive-pikachu-fallback.png"
+          reducedMotion={reducedMotion}
+          videoSrc={officialImmersiveVideo}
+        />
+      </div>
+      <div className="immersive-copy">
+        <h2>Immersive cards</h2>
+        <p>
+          Be on the lookout for new “immersive cards,” which will make you feel as though you’ve
+          leapt into the world of the card’s illustration.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function FeatureVideos({ reducedMotion }: { reducedMotion: boolean }) {
+  return (
+    <div className="feature-video-bg">
+      <GameOverview reducedMotion={reducedMotion} />
+      <ImmersiveCards reducedMotion={reducedMotion} />
+    </div>
   );
 }
 
 function AboutTcg() {
   return (
     <section
-      className="section about-tcg-section reveal"
-      style={{
-        backgroundImage: `linear-gradient(rgba(248, 252, 255, 0.94), rgba(248, 252, 255, 0.94)), url(${asset("/assets/poke-pattern.png")})`
-      }}
+      className="about-tcg-section reveal"
+      style={{ "--cards-bg": `url(${asset("/assets/tcg-cards-bg-graphic.png")})` } as React.CSSProperties}
     >
-      <div>
-        <h2>About the Pokémon Trading Card Game</h2>
+      <div className="about-header-media">
+        <img src={asset("/assets/cardspread-header.webp")} alt="" />
       </div>
-      <div className="about-copy">
+      <div className="overview-copy">
+        <h2>About the Pokémon Trading Card Game</h2>
         <p>
           Debuting in October 1996, the Pokémon Trading Card Game is based on the world introduced
           in the Pokémon video game series. Players can collect cards featuring their favorite
@@ -262,37 +360,27 @@ function AboutTcg() {
   );
 }
 
-function ImmersiveCards() {
+function Newsletter() {
   return (
-    <section
-      id="cards"
-      className="section immersive-section reveal"
-      style={{
-        backgroundImage: `linear-gradient(180deg, rgba(18, 39, 77, 0.86), rgba(27, 62, 126, 0.86)), url(${asset("/assets/immersive-pikachu.webp")})`
-      }}
-    >
-      <div className="immersive-copy">
-        <h2>Immersive cards</h2>
-        <p>
-          Be on the lookout for new “immersive cards,” which will make you feel as though you’ve
-          leapt into the world of the card’s illustration.
-        </p>
+    <section className="section newsletter-section reveal">
+      <div className="newsletter-content">
+        <h2>Sign up for the newsletter!</h2>
+        <p>Be among the first to receive new game announcements!</p>
+        <a className="primary-button" href="https://www.pokemon.com/us/newsletter">
+          Subscribe
+        </a>
       </div>
     </section>
   );
 }
 
-function Newsletter() {
+function OfficialLowerSections() {
   return (
-    <section className="section newsletter-section reveal">
-      <div>
-        <h2>Sign up for the newsletter!</h2>
-        <p>Be among the first to receive new game announcements!</p>
-      </div>
-      <a className="primary-button" href="https://www.pokemon.com/us/newsletter">
-        Subscribe
-      </a>
-    </section>
+    <div className="official-lower-bg">
+      <AboutTcg />
+      <ImageDivider src="/assets/pokeball-divider.webp" className="pokeball-divider" />
+      <Newsletter />
+    </div>
   );
 }
 
@@ -344,13 +432,29 @@ function VideoModal({
 function Footer() {
   return (
     <footer className="site-footer">
-      <img src={asset("/assets/tcgpocket-logo.webp")} alt="Pokémon Trading Card Game Pocket" />
+      <img
+        className="footer-logo"
+        src={asset("/assets/tcgpocket-logo-footer.webp")}
+        alt="Pokémon Trading Card Game Pocket"
+      />
+      <div className="region-selector" aria-label="Region">
+        <span>Select your region — United States</span>
+        <strong>United States</strong>
+      </div>
       <nav aria-label="Footer links">
         <a href="https://www.pokemon.com/us/privacy-notice">Privacy Notice</a>
         <a href="https://www.pokemon.com/us/terms-of-use">Terms of Use</a>
         <a href="https://support.pokemon.com/">Customer Service</a>
         <a href="https://community.pokemon.com/en-us/categories/tcg-pocket">Forums</a>
       </nav>
+      <div className="footer-logos" aria-label="Official logos">
+        <img src={asset("/assets/logo-tpc.svg")} alt="The Pokemon Company" />
+        <img src={asset("/assets/logo-nintendo.svg")} alt="Nintendo" />
+        <img
+          src={asset("/assets/privacy-badge.webp")}
+          alt="BBB Caru - Kid's Privacy Safe Harbor"
+        />
+      </div>
       <p>Products, contents, features, etc. subject to changes.</p>
       <p>Screenshots and footage are from a product in development and not final.</p>
       <p>Free-to-start; optional in-game purchases available.</p>
@@ -395,25 +499,36 @@ export default function Home() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("is-visible");
-            observer.unobserve(entry.target);
-          }
+          entry.target.classList.toggle("is-visible", entry.isIntersecting);
         });
       },
-      { rootMargin: "0px 0px -12% 0px", threshold: 0.16 }
+      { rootMargin: "0px 0px -14% 0px", threshold: 0.01 }
     );
 
     revealItems.forEach((item) => observer.observe(item));
-    window.requestAnimationFrame(() => {
-      revealItems.forEach((item) => {
-        const rect = item.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.9 && rect.bottom > 0) {
-          item.classList.add("is-visible");
-          observer.unobserve(item);
-        }
-      });
-    });
+
+    return () => observer.disconnect();
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (reducedMotion || !("IntersectionObserver" in window)) return;
+
+    const videos = Array.from(document.querySelectorAll<HTMLVideoElement>("video"));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target as HTMLVideoElement;
+          if (entry.isIntersecting) {
+            void video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { rootMargin: "160px 0px", threshold: 0.08 }
+    );
+
+    videos.forEach((video) => observer.observe(video));
     return () => observer.disconnect();
   }, [reducedMotion]);
 
@@ -421,14 +536,12 @@ export default function Home() {
     <>
       <Hero reducedMotion={reducedMotion} onToggleMotion={() => setReducedMotion((v) => !v)} />
       <main>
-        <StoreCta />
-        <WebStore />
-        <VideoDetails onOpen={() => setModalOpen(true)} />
+        <DevicesAnnouncement onOpen={() => setModalOpen(true)} />
+        <ImageDivider src="/assets/top-divider.webp" className="top-divider" />
         <NewsGrid />
-        <GameOverview />
-        <ImmersiveCards />
-        <AboutTcg />
-        <Newsletter />
+        <ImageDivider src="/assets/bottom-divider.webp" className="bottom-divider" />
+        <FeatureVideos reducedMotion={reducedMotion} />
+        <OfficialLowerSections />
       </main>
       <Footer />
       <VideoModal open={modalOpen} onClose={() => setModalOpen(false)} />
