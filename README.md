@@ -31,7 +31,7 @@ https://itshaoo.github.io/pokemon-tcg-pocket/
 
 ### What I Changed
 
-After the first version, I refined the project by matching the official background sections more closely, replacing the Shop Now preview with a playable video modal, adjusting the Latest News dividers and overflow, resizing the About and Sign up sections, adding yellow borders around the lower blue section, improving mobile ordering for the Immersive cards section, changing the Details text color, adding a Back-to-top button, and polishing hover and scroll animations.
+After the first version, I refined the project by matching the official background sections more closely, adding moving background effects, adjusting the Latest News dividers and overflow, resizing the About and Sign up sections, adding yellow borders around the lower blue section, improving mobile ordering for the Immersive cards section, changing the Details text color, adding a Back-to-top button, and polishing hover and scroll animations.
 
 ## Reflection
 
