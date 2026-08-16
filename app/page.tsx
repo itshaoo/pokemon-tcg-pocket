@@ -4,6 +4,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 const basePath = process.env.NODE_ENV === "production" ? "/pokemon-tcg-pocket" : "";
 const asset = (path: string) => `${basePath}${path}`;
+const officialHeroVideo = "https://tcgpocket.pokemon.com/videos/background-video.mp4";
+const officialTrailerEmbed =
+  "https://www.youtube.com/embed/W_s8I736G2k?autoplay=1&rel=0&modestbranding=1";
 
 type CarouselCard = {
   id: string;
@@ -234,16 +237,20 @@ function Hero({
         style={{ backgroundImage: `url(${asset("/assets/hero-fallback.jpg")})` }}
         aria-hidden="true"
       />
-      <div className="hero-glow" aria-hidden="true" />
-      <div className="floating-card card-one" aria-hidden="true">
-        Lightning
-      </div>
-      <div className="floating-card card-two" aria-hidden="true">
-        Fire
-      </div>
-      <div className="floating-card card-three" aria-hidden="true">
-        Water
-      </div>
+      {!reducedMotion && (
+        <video
+          className="hero-video"
+          autoPlay
+          loop
+          muted
+          playsInline
+          poster={asset("/assets/hero-fallback.jpg")}
+          aria-hidden="true"
+        >
+          <source src={officialHeroVideo} type="video/mp4" />
+        </video>
+      )}
+      <div className="hero-atmosphere" aria-hidden="true" />
       <div className="hero-content">
         <img
           className="hero-logo"
@@ -296,46 +303,66 @@ function StoreCta() {
 
 function PackReveal({ reducedMotion }: { reducedMotion: boolean }) {
   const [opened, setOpened] = useState(false);
+  const [revealedCount, setRevealedCount] = useState(0);
   const [round, setRound] = useState(0);
 
-  const togglePack = () => {
-    if (opened) {
-      setOpened(false);
-      window.setTimeout(() => setRound((value) => value + 1), reducedMotion ? 0 : 220);
+  const advancePack = () => {
+    if (!opened) {
+      setOpened(true);
+      setRevealedCount(0);
       return;
     }
-    setOpened(true);
+
+    if (revealedCount < packCards.length) {
+      setRevealedCount((value) => value + 1);
+      return;
+    }
+
+    setOpened(false);
+    setRevealedCount(0);
+    window.setTimeout(() => setRound((value) => value + 1), reducedMotion ? 0 : 220);
   };
 
+  const packButtonLabel = !opened
+    ? "Open Pack"
+    : revealedCount < packCards.length
+      ? "Reveal Next"
+      : "Reset Pack";
+
   return (
-    <section className={`section pack-section ${opened ? "is-open" : ""}`}>
+    <section
+      className={`section pack-section ${opened ? "is-open" : ""} reveal-${revealedCount}`}
+    >
       <div className="pack-copy">
         <p className="eyebrow">Pack Opening</p>
-        <h2>Make every pull feel like a reveal.</h2>
+        <h2>Slide open the pack, then reveal each card.</h2>
         <p>
-          Fresh booster packs arrive with layered foil, bright card art, and a little burst of
-          anticipation before the collection grows.
+          The moment is paced like a mobile pack opening: foil separates first, then cards wait in a
+          stack before each pull flips into the collection.
         </p>
-        <button className="primary-button" type="button" onClick={togglePack}>
-          {opened ? "Reset Pack" : "Open Pack"}
+        <button className="primary-button" type="button" onClick={advancePack}>
+          {packButtonLabel}
         </button>
       </div>
       <div className="pack-stage" aria-live="polite">
-        <div className="pack-burst" aria-hidden="true" />
+        <div className="pack-table-light" aria-hidden="true" />
         <button
           className="booster-pack"
           type="button"
-          onClick={togglePack}
-          aria-label={opened ? "Reset pack opening" : "Open booster pack"}
+          onClick={advancePack}
+          aria-label={packButtonLabel}
         >
-          <span>Pokémon</span>
+          <span className="pack-crimp top" />
+          <span className="pack-crimp bottom" />
+          <span className="pack-logo">Pokémon</span>
           <strong>TCG Pocket</strong>
           <em>Booster Pack</em>
+          <span className="tear-line" />
         </button>
-        <div className="revealed-cards" key={round}>
+        <div className="card-stack" key={round}>
           {packCards.map((card, index) => (
             <article
-              className="pull-card"
+              className={`pull-card ${index < revealedCount ? "is-revealed" : ""}`}
               key={card.title}
               style={
                 {
@@ -653,13 +680,15 @@ function VideoModal({
         <button type="button" className="close-button" onClick={onClose} aria-label="Close trailer">
           ×
         </button>
-        <img src={asset("/assets/trailer-thumbnail.jpg")} alt="" />
+        <iframe
+          src={officialTrailerEmbed}
+          title="Pokémon TCG Pocket: Ruler of the Skies | Official Trailer"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
         <div>
           <h2 id="trailer-title">Pokémon TCG Pocket Details!</h2>
-          <p>
-            This demo uses a modal preview instead of embedding the official video, keeping the
-            interaction focused and GitHub Pages friendly.
-          </p>
+          <p>Watch the official trailer in-page, then return to the card experience.</p>
         </div>
       </div>
     </div>
